@@ -12,8 +12,8 @@ const config = {
 };
 
 setInterval(function() {
-		http.get('https://susi-slackbot.herokuapp.com/');
-	}, 1200000);
+    http.get('https://susi-slackbot.herokuapp.com/');
+}, 1200000);
 
 
 // create LINE SDK client
@@ -51,15 +51,39 @@ function handleEvent(event) {
         if (error1) throw new Error(error1);
         // answer fetched from susi
         //console.log(body1);
+        var type = (JSON.parse(body1)).answers[0].actions;
         var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
         // create a echoing text message
-        const answer = {
-            type: 'text',
-            text: ans
-        };
+        if (type.length == 1 && type[0].type == "answer") {
+            const answer = {
+                type: 'text',
+                text: ans
+            };
+            // use reply API
+            return client.replyMessage(event.replyToken, answer);
+        } else if (type.length == 3 && type[2].type == "map") {
+            var lat = type[2].latitude;
+            var lon = type[2].longitude;
+            var address = JSON.parse(body1)).answers[0].data[0].place
 
-        // use reply API
-        return client.replyMessage(event.replyToken, answer);
+            const answer1 = [
+			{
+                type: 'text',
+                text: ans
+            },
+			{
+                "type": "location",
+                "title": "Location",
+                "address": address,
+                "latitude": lat,
+                "longitude": lon
+            }
+			]
+
+            // use reply API
+            return client.replyMessage(event.replyToken, answer1);
+
+        }
 
     })
 
