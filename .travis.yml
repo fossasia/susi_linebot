@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "iojs"
+  - "8.1.0"
+  - "7.1.0"
+  - "6.1.0"
+  - "5.1.0"
+before_script:
+   - npm install
+script:
+   - npm test
