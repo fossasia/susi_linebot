@@ -66,38 +66,37 @@ function handleEvent(event) {
             var lon = type[2].longitude;
             var address = JSON.parse(body1).answers[0].data[0].place
 
-            const answer1 = [
-			{
-                type: 'text',
-                text: ans
-            },
-			{
-                "type": "location",
-                "title": "Location",
-                "address": address,
-                "latitude": lat,
-                "longitude": lon
-            }
-			]
+            const answer1 = [{
+                    type: 'text',
+                    text: ans
+                },
+                {
+                    "type": "location",
+                    "title": "Location",
+                    "address": address,
+                    "latitude": lat,
+                    "longitude": lon
+                }
+            ]
 
             // use reply API
             return client.replyMessage(event.replyToken, answer1);
 
-        }else if (type.length == 1 && type[0].type == "table") {
-          var data = JSON.parse(body1).answers[0].data;
-					var columns = type[0].columns;
-					var key = Object.keys(columns);
-					var msg = [];
-          console.log(key);
+        } else if (type.length == 1 && type[0].type == "table") {
+            var data = JSON.parse(body1).answers[0].data;
+            var columns = type[0].columns;
+            var key = Object.keys(columns);
+            var msg = [];
+            console.log(key);
 
-					for(var i = 0; i < 5; i++){
-						msg[i] ="";
-						msg[i] = {
-              type: 'text',
-              text: key[0].toUpperCase()+": "+data[i][key[0]]+"\n"+key[1].toUpperCase()+": "+data[i][key[1]]+"\n"+key[2].toUpperCase()+": "+data[i][key[2]]
+            for (var i = 0; i < 5; i++) {
+                msg[i] = "";
+                msg[i] = {
+                    type: 'text',
+                    text: key[0].toUpperCase() + ": " + data[i][key[0]] + "\n" + key[1].toUpperCase() + ": " + data[i][key[1]] + "\n" + key[2].toUpperCase() + ": " + data[i][key[2]]
+                }
             }
-					}
-          return client.replyMessage(event.replyToken, msg);
+            return client.replyMessage(event.replyToken, msg);
         }
 
     })
