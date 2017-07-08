@@ -97,6 +97,28 @@ function handleEvent(event) {
                 }
             }
             return client.replyMessage(event.replyToken, msg);
+        }else if (type.length == 2 && type[1].type == "rss"){
+          var data = JSON.parse(body1).answers[0].data;
+          var columns = type[1];
+          var key = Object.keys(columns);
+          var msg = [];
+          console.log(key);
+
+          for (var i = 0; i < 4; i++) {
+            if(i==0){
+                msg[i] = {
+                      type: 'text',
+                      text: ans
+                  }
+            }else{
+              msg[i] = "";
+              msg[i] = {
+                  type: 'text',
+                  text: key[1].toUpperCase() + ": " + data[i][key[1]] + "\n" + key[2].toUpperCase() + ": " + data[i][key[2]] + "\n" + key[3].toUpperCase() + ": " + data[i][key[3]]
+              }
+            }
+          }
+          return client.replyMessage(event.replyToken, msg);
         }
 
     })
