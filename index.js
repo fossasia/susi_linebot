@@ -64,25 +64,61 @@ function handleEvent(event) {
         } else if (type.length == 3 && type[2].type == "map") {
             var lat = type[2].latitude;
             var lon = type[2].longitude;
-            var address = JSON.parse(body1)).answers[0].data[0].place
+            var address = JSON.parse(body1).answers[0].data[0].place
 
-            const answer1 = [
-			{
-                type: 'text',
-                text: ans
-            },
-			{
-                "type": "location",
-                "title": "Location",
-                "address": address,
-                "latitude": lat,
-                "longitude": lon
-            }
-			]
+            const answer1 = [{
+                    type: 'text',
+                    text: ans
+                },
+                {
+                    "type": "location",
+                    "title": "Location",
+                    "address": address,
+                    "latitude": lat,
+                    "longitude": lon
+                }
+            ]
 
             // use reply API
             return client.replyMessage(event.replyToken, answer1);
 
+        } else if (type.length == 1 && type[0].type == "table") {
+            var data = JSON.parse(body1).answers[0].data;
+            var columns = type[0].columns;
+            var key = Object.keys(columns);
+            var msg = [];
+            console.log(key);
+
+            for (var i = 0; i < 5; i++) {
+                msg[i] = "";
+                msg[i] = {
+                    type: 'text',
+                    text: key[0].toUpperCase() + ": " + data[i][key[0]] + "\n" + key[1].toUpperCase() + ": " + data[i][key[1]] + "\n" + key[2].toUpperCase() + ": " + data[i][key[2]]
+                }
+            }
+            return client.replyMessage(event.replyToken, msg);
+        }else if (type.length == 2 && type[1].type == "rss"){
+          var data = JSON.parse(body1).answers[0].data;
+          var columns = type[1];
+          var key = Object.keys(columns);
+          var msg = [];
+          console.log(key);
+
+          for (var i = 0; i < 4; i++) {
+            if(i==0){
+                msg[i] = {
+                      type: 'text',
+                      text: ans
+                  }
+            }else{
+              msg[i] = "";
+              msg[i] = {
+                  type: 'text',
+                  text: key[1].toUpperCase() + ": " + data[i][key[1]] + "\n" + key[2].toUpperCase() + ": " + data[i][key[2]] + "\n" + key[3].toUpperCase() + ": " + data[i][key[3]]
+              }
+            }
+          }
+          return client.replyMessage(event.replyToken, msg);
         }
 
     })
