@@ -67,6 +67,7 @@ function handleEvent(event) {
             var address = JSON.parse(body1).answers[0].data[0].place
 
             const answer = [{
+
                     type: 'text',
                     text: ans
                 },
@@ -97,6 +98,7 @@ function handleEvent(event) {
                 }
             }
             return client.replyMessage(event.replyToken, msg);
+
         } else if (type.length == 2 && type[1].type == "rss") {
             var data = JSON.parse(body1).answers[0].data;
             var columns = type[1];
@@ -157,8 +159,6 @@ function handleEvent(event) {
         }
 
     })
-
-
 }
 
 // listen on port
