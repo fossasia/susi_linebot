@@ -66,7 +66,8 @@ function handleEvent(event) {
             var lon = type[2].longitude;
             var address = JSON.parse(body1).answers[0].data[0].place
 
-            const answer1 = [{
+            const answer = [{
+
                     type: 'text',
                     text: ans
                 },
@@ -80,7 +81,7 @@ function handleEvent(event) {
             ]
 
             // use reply API
-            return client.replyMessage(event.replyToken, answer1);
+            return client.replyMessage(event.replyToken, answer);
 
         } else if (type.length == 1 && type[0].type == "table") {
             var data = JSON.parse(body1).answers[0].data;
@@ -97,33 +98,67 @@ function handleEvent(event) {
                 }
             }
             return client.replyMessage(event.replyToken, msg);
-        }else if (type.length == 2 && type[1].type == "rss"){
-          var data = JSON.parse(body1).answers[0].data;
-          var columns = type[1];
-          var key = Object.keys(columns);
-          var msg = [];
-          console.log(key);
 
-          for (var i = 0; i < 4; i++) {
-            if(i==0){
-                msg[i] = {
-                      type: 'text',
-                      text: ans
-                  }
-            }else{
-              msg[i] = "";
-              msg[i] = {
-                  type: 'text',
-                  text: key[1].toUpperCase() + ": " + data[i][key[1]] + "\n" + key[2].toUpperCase() + ": " + data[i][key[2]] + "\n" + key[3].toUpperCase() + ": " + data[i][key[3]]
-              }
+        } else if (type.length == 2 && type[1].type == "rss") {
+            var data = JSON.parse(body1).answers[0].data;
+            var columns = type[1];
+            var key = Object.keys(columns);
+            var msg, title, link, query;
+            var carousel = [];
+            console.log(key);
+
+            for (var i = 1; i < 4; i++) {
+                title = key[1].toUpperCase() + ": " + data[i][key[1]];
+                query = title;
+                msg = key[2].toUpperCase() + ": " + data[i][key[2]];
+                link = data[i][key[3]]
+                if (title.length >= 40) {
+                    title = title.substring(0, 36);
+                    title = title + "...";
+                }
+
+                if (msg.length >= 60) {
+                    msg = msg.substring(0, 56);
+                    msg = msg + "...";
+                }
+
+                carousel[i] = {
+                    "title": title,
+                    "text": msg,
+                    "actions": [{
+                            "type": "uri",
+                            "label": "View detail",
+                            "uri": link
+                        },
+                        {
+                            "type": "message",
+                            "label": "Ask SUSI again",
+                            "text": query
+                        }
+                    ]
+                };
             }
-          }
-          return client.replyMessage(event.replyToken, msg);
+            const answer = [{
+                    type: 'text',
+                    text: ans
+                },
+                {
+                    "type": "template",
+                    "altText": "this is a carousel template",
+                    "template": {
+                        "type": "carousel",
+                        "columns": [
+                            carousel[1],
+                            carousel[2],
+                            carousel[3]
+                        ]
+                    }
+                }
+            ]
+            return client.replyMessage(event.replyToken, answer);
         }
 
     })
-
-
 }
 
 // listen on port
