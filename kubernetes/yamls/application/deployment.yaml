@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: line
+  namespace: line
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: line
+    spec:
+      containers:
+      - name: line
+        image: fossasia/susi_linebot:latest-master
+        imagePullPolicy: Always
+        env: 
+        - name: CHANNEL_ACCESS_TOKEN
+          value: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        - name: CHANNEL_SECRET
+          value: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        ports:
+        - containerPort: 8080
+
