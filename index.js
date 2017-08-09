@@ -11,11 +11,6 @@ const config = {
     channelSecret: process.env.CHANNEL_SECRET,
 };
 
-setInterval(function() {
-    http.get('https://susi-slackbot.herokuapp.com/');
-}, 1200000);
-
-
 // create LINE SDK client
 const client = new line.Client(config);
 
@@ -25,7 +20,7 @@ const app = express();
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
-app.post('/webhook', line.middleware(config), (req, res) => {
+app.post('/', line.middleware(config), (req, res) => {
     Promise
         .all(req.body.events.map(handleEvent))
         .then((result) => res.json(result));
@@ -76,7 +71,6 @@ function handleEvent(event) {
             //console.log(body1);
             var type = (JSON.parse(body1)).answers[0].actions;
             var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
-            // create a echoing text message
             if (type.length == 1 && type[0].type == "answer") {
                 const answer = {
                     type: 'text',
@@ -187,7 +181,7 @@ function handleEvent(event) {
 }
 
 // listen on port
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
