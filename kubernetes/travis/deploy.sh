@@ -1,4 +1,4 @@
-export DEPLOY_BRANCH=${DEPLOY_BRANCH:-development1}
+export DEPLOY_BRANCH=${DEPLOY_BRANCH:-master}
 
 export REPOSITORY="https://github.com/${TRAVIS_REPO_SLUG}.git"
 
@@ -21,7 +21,7 @@ gcloud components install kubectl
 
 echo ">>> Decrypting credentials and authenticating gcloud account"
 gcloud config set compute/zone us-central1-b
-openssl aes-256-cbc -K $encrypted_64ad57c57e0f_key -iv $encrypted_64ad57c57e0f_iv -in ./kubernetes/travis/susi-telegrambot-e467bca1e540.json.enc -out susi-telegrambot-e467bca1e540.json -d
+openssl aes-256-cbc -K $encrypted_d337030e8f28_key -iv $encrypted_d337030e8f28_iv -in ./kubernetes/travis/susi-telegrambot-e467bca1e540.json.enc -out susi-telegrambot-e467bca1e540.json -d
 mkdir -p lib
 gcloud auth activate-service-account --key-file susi-telegrambot-e467bca1e540.json
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/susi-telegrambot-e467bca1e540.json
