@@ -35,7 +35,7 @@ function handleEvent(event) {
     
     var options1 = {
         method: 'GET',
-        url: 'http://api.asksusi.com/susi/chat.json',
+        url: 'http://api.susi.ai/susi/chat.json',
         qs: {
             timezoneOffset: '-330',
             q: event.message.text
@@ -64,7 +64,44 @@ function handleEvent(event) {
             }
         };
         return client.replyMessage(event.replyToken, answer);
-    } else {
+    } 
+    else if(event.message.text.toLowerCase() === "start chatting"){
+    	request(options1, function(error1, response1, body1) {
+    		if (error1) throw new Error(error1);
+            
+            // answer fetched from susi
+            var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
+            client.replyMessage(event.replyToken, ans);
+            const sampleQ = {
+	            "type": "template",
+	            "altText": "template",
+	            "template": {
+	                "type": "buttons",
+	                "title": "Sample queries",
+	                "text": "You can try the following:",
+	                "actions": [
+	                	{
+	                        "type": "message",
+	                        "label": "What is FOSSASIA?",
+	                        "text": "What is FOSSASIA?"
+	                    },
+	                    {
+	                        "type": "message",
+	                        "label": "Who is Einstein?",
+	                        "text": "Who is Einstein?"
+	                    },
+	                    {
+	                        "type": "message",
+	                        "label": "Borders with INDIA",
+	                        "text": "Borders with INDIA"
+	                    }
+	                ]
+	            }
+	        };
+        	return client.replyMessage(event.replyToken, sampleQ);
+        });
+    }
+    else {
         request(options1, function(error1, response1, body1) {
             if (error1) throw new Error(error1);
             // answer fetched from susi
@@ -174,10 +211,8 @@ function handleEvent(event) {
                 ]
                 return client.replyMessage(event.replyToken, answer);
             }
-
         })
     }
-
 }
 
 // listen on port
