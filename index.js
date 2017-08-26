@@ -32,7 +32,7 @@ function handleEvent(event) {
         // ignore non-text-message event
         return Promise.resolve(null);
     }
-    
+
     var options1 = {
         method: 'GET',
         url: 'http://api.susi.ai/susi/chat.json',
@@ -64,44 +64,45 @@ function handleEvent(event) {
             }
         };
         return client.replyMessage(event.replyToken, answer);
-    } 
-    else if(event.message.text.toLowerCase() === "start chatting"){
-    	request(options1, function(error1, response1, body1) {
-    		if (error1) throw new Error(error1);
-            
+    } else if (event.message.text.toLowerCase() === "start chatting") {
+        request(options1, function(error1, response1, body1) {
+            if (error1) throw new Error(error1);
+
             // answer fetched from susi
             var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
-            client.replyMessage(event.replyToken, ans);
-            const sampleQ = {
-	            "type": "template",
-	            "altText": "template",
-	            "template": {
-	                "type": "buttons",
-	                "title": "Sample queries",
-	                "text": "You can try the following:",
-	                "actions": [
-	                	{
-	                        "type": "message",
-	                        "label": "What is FOSSASIA?",
-	                        "text": "What is FOSSASIA?"
-	                    },
-	                    {
-	                        "type": "message",
-	                        "label": "Who is Einstein?",
-	                        "text": "Who is Einstein?"
-	                    },
-	                    {
-	                        "type": "message",
-	                        "label": "Borders with INDIA",
-	                        "text": "Borders with INDIA"
-	                    }
-	                ]
-	            }
-	        };
-        	return client.replyMessage(event.replyToken, sampleQ);
+            const sampleQ = [{
+                    type: 'text',
+                    text: ans
+                },
+                {
+                    "type": "template",
+                    "altText": "template",
+                    "template": {
+                        "type": "buttons",
+                        "title": "Sample queries",
+                        "text": "You can try the following:",
+                        "actions": [{
+                                "type": "message",
+                                "label": "What is FOSSASIA?",
+                                "text": "What is FOSSASIA?"
+                            },
+                            {
+                                "type": "message",
+                                "label": "Who is Einstein?",
+                                "text": "Who is Einstein?"
+                            },
+                            {
+                                "type": "message",
+                                "label": "Borders with INDIA",
+                                "text": "Borders with INDIA"
+                            }
+                        ]
+                    }
+                }
+            ]
+            return client.replyMessage(event.replyToken, sampleQ);
         });
-    }
-    else {
+    } else {
         request(options1, function(error1, response1, body1) {
             if (error1) throw new Error(error1);
             // answer fetched from susi
@@ -118,7 +119,7 @@ function handleEvent(event) {
             } else if (type.length == 3 && type[2].type == "map") {
                 var lat = type[2].latitude;
                 var lon = type[2].longitude;
-                var address = JSON.parse(body1).answers[0].data[0].place
+                var address = JSON.parse(body1).answers[0].data[0][1]
 
                 const answer = [{
 
