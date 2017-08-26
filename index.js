@@ -93,8 +93,8 @@ function handleEvent(event) {
                             },
                             {
                                 "type": "message",
-                                "label": "Borders with INDIA",
-                                "text": "Borders with INDIA"
+                                "label": "Borders with India",
+                                "text": "Borders with India"
                             }
                         ]
                     }
