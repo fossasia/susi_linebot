@@ -30,6 +30,11 @@ app.post('/', line.middleware(config), (req, res) => {
         });
 });
 
+
+setInterval(function() {
+        http.get(process.env.HEROKU_URL);
+    }, 600000); // every 10 minutes
+
 // event handler
 function handleEvent(event) {
     if (event.type !== 'message' || event.message.type !== 'text') {
