@@ -119,10 +119,19 @@ function handleEvent(event) {
             var type = (JSON.parse(body1)).answers[0].actions;
             var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
             if (type.length == 1 && type[0].type == "answer") {
-                const answer = {
-                    type: 'text',
-                    text: ans
-                };
+                let answer;
+                if((JSON.parse(body1)).answers[0].data[0].type === 'photo'){
+                    answer = {
+                        type: 'image',
+                        originalContentUrl: ans,
+                        previewImageUrl: ans
+                    };
+                } else {
+                    answer = {
+                        type: 'text',
+                        text: ans
+                    };
+                }
                 // use reply API
                 return client.replyMessage(event.replyToken, answer);
             } else if (type.length == 3 && type[2].type == "map") {
