@@ -50,7 +50,7 @@ function handleEvent(event) {
         }
     };
 
-    if (event.message.text == "start" || event.message.text == "Start" || event.message.text == "START") {
+    if (event.message.text.toLowerCase() == "start") {
         const answer = {
             "type": "template",
             "altText": "this is a template",
@@ -155,7 +155,7 @@ function handleEvent(event) {
                 // use reply API
                 return client.replyMessage(event.replyToken, answer);
 
-            } else if (type.length == 1 && type[0].type == "table") {
+            } else if (type[0].type == "table") {
                 var data = JSON.parse(body1).answers[0].data;
                 var columns = type[0].columns;
                 var key = Object.keys(columns);
