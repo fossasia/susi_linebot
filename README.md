@@ -1,5 +1,7 @@
 # Getting Started With Line SUSI AI Bot:
 
+[![Build Status](https://travis-ci.org/fossasia/susi_linebot.svg?branch=master)](https://travis-ci.org/fossasia/susi_linebot)  
+
 If you want to add SUSI Line bot as a friend Scan this QR Code and if you want to integrate follow steps given below 
 
  <img src="/docs/images/Barcode.PNG" width="370">  
