@@ -117,7 +117,24 @@ function handleEvent(event) {
             //console.log(body1);
             var type = (JSON.parse(body1)).answers[0].actions;
             var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
-            if (type.length == 1 && type[0].type == "answer") {
+            if ( ((JSON.parse(body1)).answers[0].data[0].lon) || ((JSON.parse(body1)).answers[0].data[0].lat) ) {
+                var lat = JSON.parse(body1).answers[0].data[0].lat;
+                var lon = JSON.parse(body1).answers[0].data[0].lon;
+                var address = JSON.parse(body1).answers[0].data[0].locationInfo;
+                var title = JSON.parse(body1).answers[0].data[0][1];
+                const answer = {
+                    type: "location",
+                    title: title,
+                    address: title,
+                    latitude: lat,
+                    longitude: lon
+                };
+                // use reply API
+                return client.replyMessage(event.replyToken, answer)
+                .catch((err) => {
+                    console.log('Error - '+err);
+                });
+            } else if (type.length == 1 && type[0].type == "answer") {
                 let answer;
                 if((JSON.parse(body1)).answers[0].data[0].type === 'photo'){
                     answer = {
@@ -131,27 +148,6 @@ function handleEvent(event) {
                         text: ans
                     };
                 }
-                // use reply API
-                return client.replyMessage(event.replyToken, answer);
-            } else if (type.length == 3 && type[2].type == "map") {
-                var lat = type[2].latitude;
-                var lon = type[2].longitude;
-                var address = JSON.parse(body1).answers[0].data[0][1]
-
-                const answer = [{
-
-                        type: 'text',
-                        text: ans
-                    },
-                    {
-                        "type": "location",
-                        "title": "Location",
-                        "address": address,
-                        "latitude": lat,
-                        "longitude": lon
-                    }
-                ]
-
                 // use reply API
                 return client.replyMessage(event.replyToken, answer);
 
