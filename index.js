@@ -114,7 +114,6 @@ function handleEvent(event) {
         request(options1, function(error1, response1, body1) {
             if (error1) throw new Error(error1);
             // answer fetched from susi
-            //console.log(body1);
             var type = (JSON.parse(body1)).answers[0].actions;
             var ans = (JSON.parse(body1)).answers[0].actions[0].expression;
             if ( ((JSON.parse(body1)).answers[0].data[0].lon) || ((JSON.parse(body1)).answers[0].data[0].lat) ) {
@@ -128,6 +127,19 @@ function handleEvent(event) {
                     address: title,
                     latitude: lat,
                     longitude: lon
+                };
+                // use reply API
+                return client.replyMessage(event.replyToken, answer)
+                .catch((err) => {
+                    console.log('Error - '+err);
+                });
+            } else if (JSON.parse(body1).answers[0].data[0].type === 'gif') {
+                let videoUrl = JSON.parse(body1).answers[0].data[0].v1.original.mp4;
+                let previewUrl = JSON.parse(body1).answers[0].data[0].images["480w_still"].url;
+                const answer = {
+                    type: 'video',
+                    originalContentUrl: videoUrl,
+                    previewImageUrl: previewUrl
                 };
                 // use reply API
                 return client.replyMessage(event.replyToken, answer)
